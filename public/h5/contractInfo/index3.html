@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>变更台账详情</title>
+    <link rel="stylesheet" type="text/css" href="./css/index.css" />
+    <script src="./js/render.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/vue.min.js"></script>
+    <style>
+      .info-table {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="info-wrap w-h-all">
+      <div id="print">
+        <h2 class="txc">工程变更增减费用计算表</h2>
+        <table class="info-table mgt10">
+          <tr>
+            <td colspan="2">工程名称</td>
+            <td colspan="2">{{info.organ}}</td>
+            <td colspan="2">编号</td>
+            <td colspan="2">{{info.parameter_no}}</td>
+            <td colspan="2">合同段</td>
+            <td>{{info.parameter_contract_period}}</td>
+          </tr>
+          <tr>
+            <td colspan="2">桩号</td>
+            <td colspan="2">{{info.parameter_pile_no}}</td>
+            <td colspan="2">工程名称</td>
+            <td colspan="5">{{info.parameter_name}}</td>
+          </tr>
+          <tr>
+            <td>序号</td>
+            <td>清单编号</td>
+            <td>工程项目名称</td>
+            <td>单位</td>
+            <td>合同单价(元)</td>
+            <td>新增单价(元)</td>
+            <td>工程数量(原设计)</td>
+            <td>工程数量(变更后)</td>
+            <td>数量增减</td>
+            <td>金额增减(元)</td>
+            <td>附注</td>
+          </tr>
+          <template v-for="(itm, ind) in info.list">
+            <tr :key="ind">
+              <td>
+                {{ ind + 1 }}
+              </td>
+              <td>
+                {{ itm.parameter_detail_no }}
+              </td>
+              <td>
+                {{itm.parameter_detail_name}}
+              </td>
+              <td>
+                {{itm.parameter_detail_unit}}
+              </td>
+              <td>{{itm.parameter_detail_contract_price}}</td>
+              <td>{{itm.parameter_detail_price}}</td>
+              <td>{{itm.parameter_detail_num}}</td>
+              <td>{{itm.parameter_detail_para_num}}</td>
+              <td>
+                {{ itm.parameter_detail_change_num }}
+              </td>
+              <td>{{ itm.parameter_detail_change_money }}</td>
+              <td>{{ itm.parameter_detail_remark }}</td>
+            </tr>
+          </template>
+          <tr>
+            <td>
+              合计
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{totalMoney}}</td>
+            <td></td>
+          </tr>
+          <template v-if="process_list.length">
+            <tr v-for="(item,index) in process_list" :key="index">
+              <td colspan="3">
+                <div style="text-align:left;padding:20px 0;">
+                  {{index==0?'填表人':'第'+(index)+'级审批'}}：{{item.sub_account_name}}
+                </div>
+              </td>
+              <td colspan="2">
+                <div style="text-align:left;padding:20px 0;">
+                  职位：{{item.sub_account_job}}
+                </div>
+              </td>
+              <td colspan="3">
+                <div style="text-align:left;padding:20px 0;position: relative;">
+                  签名：<img
+                    style="height:50px;position: absolute;top:10px"
+                    :src="item.sign_url"
+                  />
+                </div>
+              </td>
+              <td colspan="3" align="left">
+                <div style="text-align:left;padding:20px 0;" v-if="index>0">
+                  意见：{{item.revise_record_remark}}
+                </div>
+              </td>
+            </tr>
+          </template>
+        </table>
+      </div>
+    </div>
+  </body>
+  <script type="module" src="./plugins/printarea.js"></script>
+  <script type="module">
+    import print from "./plugins/printarea.js";
+    let url = location.origin;
+    let isDev = url.includes("build") ? false : true;
+    url = url + (isDev ? "/GUANDI_DEV" : "/GUANDI");
+    let id = GetQueryString("id");
+    let token = GetQueryString("id");
+    var vm = new Vue({
+      el: "#app",
+      data: {
+        info: {},
+        totalMoney: "",
+        process_list: [], //审批流程
+      },
+      mounted() {
+        this.infoFun();
+        window.addEventListener(
+          "message",
+          function(event) {
+            //点击打印
+            new print({
+              ids: "print", // * 局部打印必传入id
+              standard: "", // 文档类型，默认是html5，可选 html5，loose，strict
+              extraHead: "", // 附加在head标签上的额外标签,使用逗号分隔
+              extraCss: "", // 额外的css连接，多个逗号分开
+              popTitle: "", // title的标题
+              endCallback() {},
+            });
+          },
+          false
+        );
+      },
+      methods: {
+        infoFun() {
+          axios
+            .post(url + "?op=QueryChangeParameterParameter", {
+              parameter_id: Number(id),
+            })
+            .then((res) => {
+              if (!res.data.ext.result[0]) return;
+              this.info = res.data.ext.result[0];
+              // this.info.list totalMoney
+              this.totalMoney = this.info.list.reduce((acc, next) => {
+                return (
+                  Number(acc) + Number(next.parameter_detail_change_money)
+                ).toFixed(2);
+              }, 0);
+              // 查询审批流程
+              this.queryApproveReviseRecordWithProcess();
+            });
+        },
+        queryApproveReviseRecordWithProcess() {
+          axios
+            .post(url + "?op=QueryApproveReviseRecordWithProcess", {
+              revise_info_id: this.info.revise_info_id,
+            })
+            .then((res) => {
+              this.process_list = res.data.ext.result;
+            });
+        },
+      },
+    });
+  </script>
+</html>

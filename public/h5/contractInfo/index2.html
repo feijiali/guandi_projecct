@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>合同付款详情</title>
+    <link rel="stylesheet" type="text/css" href="./css/index.css" />
+    <script src="./js/render.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/vue.min.js"></script>
+    <style>
+      .info-table {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="info-wrap w-h-all">
+      <div id="print">
+        <h2 class="txc">项目部合同付款审批表</h2>
+        <div class="flex-between mgt20 p20">
+          <span>付款单编号：{{info.engineering_pay_no}}</span>
+          <span>编制日期：{{info.engineering_pay_date}}</span>
+          <span>金额单位：元</span>
+        </div>
+        <table class="info-table mgt10">
+          <tr>
+            <td>合同名称</td>
+            <td colspan="4">{{info.contract_approval_name}}</td>
+            <td colspan="2">合同编号</td>
+            <td colspan="5">{{info.contract_approval_number}}</td>
+          </tr>
+          <tr>
+            <td>收款单位</td>
+            <td colspan="4">{{info.engineering_pay_receive_unit}}</td>
+            <td colspan="2">合同总价</td>
+            <td colspan="5">{{info.engineering_pay_contract_money}}</td>
+          </tr>
+          <tr>
+            <td>开户银行</td>
+            <td colspan="4">{{info.engineering_pay_bank}}</td>
+            <td colspan="2">银行账号</td>
+            <td colspan="5">{{info.engineering_pay_bank_num}}</td>
+          </tr>
+          <tr>
+            <td>
+              结算项目
+            </td>
+            <td>本期</td>
+            <td colspan="3">累计</td>
+            <td colspan="2">
+              支付项目
+            </td>
+            <td colspan="3">本期</td>
+            <td colspan="2">累计</td>
+          </tr>
+          <template v-for="(item, index) in maxNum">
+            <tr :key="index">
+              <td class="td">
+                <span
+                  v-if="settlementArr[index]&&settlementArr[index].engineering_pay_detail_name"
+                  >{{index+1}}. </span
+                >{{settlementArr[index]?settlementArr[index].engineering_pay_detail_name:''}}
+              </td>
+              <td>
+                {{
+                settlementArr[index]?settlementArr[index].engineering_pay_detail_money:''
+                }}
+              </td>
+              <td colspan="3">
+                {{
+                settlementArr[index]?settlementArr[index].engineering_pay_detail_total_money:''
+                }}
+              </td>
+              <td colspan="2" class="td">
+                <span
+                  v-if="payArr[index]&&payArr[index].engineering_pay_detail_name"
+                  >{{index+1}}.
+                </span>
+                {{payArr[index]?payArr[index].engineering_pay_detail_name:''}}
+              </td>
+              <td colspan="3">
+                {{ payArr[index]?payArr[index].engineering_pay_detail_money:''
+                }}
+              </td>
+              <td colspan="2">
+                {{
+                payArr[index]?payArr[index].engineering_pay_detail_total_money:''
+                }}
+              </td>
+            </tr>
+          </template>
+          <tr>
+            <td>
+              结算小计
+            </td>
+            <td>{{info.engineering_pay_project_money}}</td>
+            <td colspan="3">{{info.engineering_pay_project_leiji}}</td>
+            <td colspan="2">
+              支付小计
+            </td>
+            <td colspan="3">{{info.engineering_pay_money}}</td>
+            <td colspan="2">{{info.engineering_pay_leiji}}</td>
+          </tr>
+          <tr>
+            <td rowspan="3">本期实付金额(元)</td>
+            <td>人民币小写</td>
+            <td colspan="10">
+              {{info.engineering_pay_total_money}}
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="2">人民币大写</td>
+            <td>仟</td>
+            <td>佰</td>
+            <td>拾</td>
+            <td>万</td>
+            <td>仟</td>
+            <td>佰</td>
+            <td>拾</td>
+            <td>元</td>
+            <td>角</td>
+            <td>分</td>
+          </tr>
+          <tr>
+            <td style="width: 55px;">
+              {{ String(Number(numberIntegerArr)).length >= 8 ?
+              numberParseChina(numberIntegerArr[0]) : "" }}
+            </td>
+            <td style="width: 55px;">
+              {{ String(Number(numberIntegerArr)).length >= 7 ?
+              numberParseChina(numberIntegerArr[1]) : "" }}
+            </td>
+            <td style="width: 55px;">
+              {{ String(Number(numberIntegerArr)).length >= 6 ?
+              numberParseChina(numberIntegerArr[2]) : "" }}
+            </td>
+            <td style="width: 55px;">
+              {{ String(Number(numberIntegerArr)).length >= 5 ?
+              numberParseChina(numberIntegerArr[3]) : "" }}
+            </td>
+            <td style="width: 55px;">
+              {{ String(Number(numberIntegerArr)).length >= 4 ?
+              numberParseChina(numberIntegerArr[4]) : "" }}
+            </td>
+            <td style="width: 55px;">
+              {{ String(Number(numberIntegerArr)).length >= 3 ?
+              numberParseChina(numberIntegerArr[5]) : "" }}
+            </td>
+            <td style="width: 55px;">
+              {{ String(Number(numberIntegerArr)).length >= 2 ?
+              numberParseChina(numberIntegerArr[6]) : "" }}
+            </td>
+            <td style="width: 55px;">
+              {{ String(Number(numberIntegerArr)).length >= 1 ?
+              numberParseChina(numberIntegerArr[7]) : "" }}
+            </td>
+            <td style="width: 55px;">
+              {{ numberParseChina(numberPointArr[0]) }}
+            </td>
+            <td style="width: 55px;">
+              {{ numberParseChina(numberPointArr[1]) }}
+            </td>
+          </tr>
+          <tr>
+            <td>至本期未累计应付未付金额</td>
+            <td colspan="11">
+              {{ info.engineering_pay_money_need }}
+            </td>
+          </tr>
+          <template v-if="process_list.length">
+            <tr v-for="(item,index) in process_list" :key="index">
+              <td colspan="4">
+                <div style="text-align:left;padding:20px 0;">
+                  {{index==0?'填表人':'第'+(index)+'级审批'}}：{{item.sub_account_name}}
+                </div>
+              </td>
+              <td colspan="2">
+                <div style="text-align:left;padding:20px 0;">
+                  职位：{{item.sub_account_job}}
+                </div>
+              </td>
+              <td colspan="5">
+                <div style="text-align:left;padding:20px 0;position: relative;">
+                  签名：<img
+                    style="height:50px;position: absolute;top:10px"
+                    :src="item.sign_url"
+                  />
+                </div>
+              </td>
+              <td colspan="7" align="left">
+                <div style="text-align:left;padding:20px 0;" v-if="index>0">
+                  意见：{{item.revise_record_remark}}
+                </div>
+              </td>
+            </tr>
+          </template>
+        </table>
+      </div>
+    </div>
+  </body>
+  <script type="module" src="./plugins/printarea.js"></script>
+  <script type="module">
+    import print from "./plugins/printarea.js";
+    let url = location.origin;
+    let isDev = url.includes("build") ? false : true;
+    url = url + (isDev ? "/GUANDI_DEV" : "/GUANDI");
+    let id = GetQueryString("id");
+    let token = GetQueryString("id");
+    var vm = new Vue({
+      el: "#app",
+      data: {
+        info: {},
+        settlementArr: [], //结算项目
+        payArr: [], //支付项目
+        maxNum: 0, //最长数
+        numberPointArr: [],
+        numberIntegerArr: [],
+        process_list: [], //审批流程
+      },
+      mounted() {
+        this.infoFun();
+        window.addEventListener(
+          "message",
+          function(event) {
+            //点击打印
+            new print({
+              ids: "print", // * 局部打印必传入id
+              standard: "", // 文档类型，默认是html5，可选 html5，loose，strict
+              extraHead: "", // 附加在head标签上的额外标签,使用逗号分隔
+              extraCss: "", // 额外的css连接，多个逗号分开
+              popTitle: "", // title的标题
+              endCallback() {},
+            });
+          },
+          false
+        );
+      },
+      methods: {
+        numberParseChina(money) {
+          //汉字的数字
+          var cnNums = new Array(
+            "零",
+            "壹",
+            "贰",
+            "叁",
+            "肆",
+            "伍",
+            "陆",
+            "柒",
+            "捌",
+            "玖"
+          );
+          return money ? cnNums[money] : "";
+        },
+        infoFun() {
+          axios
+            .post(url + "?op=QueryProjectReportEngineeringPay", {
+              engineering_pay_id: Number(id),
+            })
+            .then((res) => {
+              if (!res.data.ext.result[0]) return;
+              this.info = res.data.ext.result[0];
+              let numArr = String(this.info.engineering_pay_total_money).split(
+                "."
+              );
+              this.numberPointArr = numArr[1];
+              this.numberIntegerArr = numArr[0].padStart(8, "0");
+              // 查询审批流程
+              this.queryApproveReviseRecordWithProcess();
+              let list = this.info.list;
+              this.settlementArr = list.filter(
+                (item) => item.engineering_pay_detail_type == 1
+              );
+              let totalNum = 0;
+              this.settlementArr.forEach((item, index) => {
+                if (index != this.settlementArr.length) {
+                  totalNum += item.engineering_pay_detail_total_money
+                    ? Number(item.engineering_pay_detail_total_money)
+                    : 0;
+                }
+                this.info.engineering_pay_project_leiji = String(
+                  totalNum.toFixed(2)
+                );
+              });
+              this.payArr = list.filter(
+                (item) => item.engineering_pay_detail_type == 2
+              );
+              let totalNum2 = 0;
+              this.payArr.forEach((item, index) => {
+                if (index != this.payArr.length) {
+                  totalNum2 += item.engineering_pay_detail_total_money
+                    ? Number(item.engineering_pay_detail_total_money)
+                    : 0;
+                }
+                this.info.engineering_pay_leiji = String(totalNum2.toFixed(2));
+              });
+              this.maxNum = Math.max(
+                this.settlementArr.length,
+                this.payArr.length
+              );
+            });
+        },
+        queryApproveReviseRecordWithProcess() {
+          axios
+            .post(url + "?op=QueryApproveReviseRecordWithProcess", {
+              revise_info_id: this.info.revise_info_id,
+            })
+            .then((res) => {
+              this.process_list = res.data.ext.result;
+            });
+        },
+      },
+    });
+  </script>
+</html>

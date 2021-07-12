@@ -1,0 +1,56 @@
+$greybg: #eff1f5;
+$color-1: #131d36;
+$color-2: #8e95a7;
+$color-3: #cbd0dc;
+$color-4: #e2e8ee;
+$color-5: #e7e7fd;
+$main: #1213e9;
+$red: red;
+$pink: #f31bf3;
+$pink2: #fd5571;
+$blue: #21dcff;
+$orange: #fdb855;
+$green: #84d945;
+$lightgrey: #eef1fb;
+$linear-a: linear-gradient(to bottom, #406de0, #3636a1);
+$linear-b: linear-gradient(to right, #75a3ff, #e5eeff);
+$linear-c: linear-gradient(to bottom, #67b6fd, #5a5efd);
+$linear-d: linear-gradient(to bottom, #13f3c7, #41d3e7);
+$linear-e: linear-gradient(to right, #5a5efd, #67b6fd);
+$linear-f: linear-gradient(to right, #ff4843, #ff8b50);
+.legendgreen1 {
+  background: #3377ff;
+}
+.legendgreen2 {
+  background: #21dcff;
+}
+.legendgreen3 {
+  background: #fd5571;
+}
+.legendgreen4 {
+  background: #fdb855;
+}
+.legendgreen5 {
+  background: #1ad910;
+}
+.legendgreen6 {
+  background: #ff7143;
+}
+.linear_a {
+  background: $linear-a;
+}
+.linear_b {
+  background: $linear-b;
+}
+.linear_c {
+  background: $linear-c;
+}
+.linear_d {
+  background: $linear-d;
+}
+.linear_e {
+  background: $linear-e;
+}
+.linear_f {
+  background: $linear-f;
+}

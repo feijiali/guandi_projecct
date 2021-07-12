@@ -1,0 +1,326 @@
+<!--
+ * @Autor: 邓易
+ * @Date: 2020-12-14 14:22:26
+ * @LastEditors: 邓易
+ * @LastEditTime: 2021-04-01 15:11:24
+-->
+<template>
+  <div class="position-relative h-100 w-100">
+    <div class="position-absolute left-box rounded-1 bg-white px-2 py-1">
+      <n-scroll>
+        <div>
+          <nBackTop title="我的发文详情" />
+        </div>
+        <div class="d-flex">
+          <n-button
+            class="mr-2"
+            :btnText="'撤销'"
+            :width="'150px'"
+            :colorBtn="'grey'"
+            @buttonClick="undo"
+            v-if="undoArr.indexOf(info.revise_info_state) == -1"
+          >
+            <template v-slot:button-slot>
+              <i class="iconfont btn-btn_cancel mr-1"></i>
+            </template>
+          </n-button>
+          <n-button
+            class="mr-2"
+            :btnText="'编辑'"
+            :width="'150px'"
+            :colorBtn="'blue'"
+            @buttonClick="handle"
+            v-if="
+              !info.revise_account_reviewed_account_ids &&
+              info.revise_info_state != 5
+            "
+          >
+            <template v-slot:button-slot>
+              <i class="iconfont btn-btn_list_edit mr-1"></i> </template
+          ></n-button>
+          <n-button
+            class="mr-2"
+            :btnText="'删除'"
+            :width="'150px'"
+            :colorBtn="'orange'"
+            @buttonClick="deleteFun"
+            v-if="
+              (info.revise_info_state == 2 &&
+                !info.revise_account_reviewed_account_ids) ||
+              info.revise_info_state == 5 ||
+              info.revise_info_state == 4
+            "
+          >
+            <template v-slot:button-slot>
+              <i class="iconfont btn-btn_list_trash mr-1"></i> </template
+          ></n-button>
+          <n-button
+            :colorBtn="'green'"
+            :btnText="'打印'"
+            :width="'150px'"
+            v-print="printObj"
+          >
+            <template v-slot:button-slot>
+              <i class="iconfont btn-icon_homepage_menu_17 mr-1"></i> </template
+          ></n-button>
+        </div>
+        <el-form ref="ruleform" id="print" class="el-form-box pt-2">
+          <table class="table-box1" border="1">
+            <thead>
+              <tr>
+                <td colspan="2">
+                  <div
+                    class="
+                      font-20
+                      text-hover-danger
+                      font-weight-bold
+                      text-center
+                    "
+                  >
+                    广东冠迪建设有限公司文件
+                  </div>
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="2">
+                  <el-form-item class="form-item-long" label="发文字号：">
+                    {{ info.receive_num }}
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <el-form-item class="form-item-long must" label="缓急：">
+                    {{
+                      [
+                        "",
+                        "特急公文(特急)",
+                        "紧急公文(急件)",
+                        "常规公文(平件)",
+                      ][info.receive_urgent]
+                    }}
+                  </el-form-item>
+                </td>
+                <td>
+                  <el-form-item class="form-item-long must" label="密级：">
+                    {{
+                      ["", "绝密", "机密", "秘密", "普通", "此件不公开"][
+                        info.receive_secret
+                      ]
+                    }}
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <el-form-item class="form-item-long pd" label="签发：">
+                    <div class="w-100 scroll_over">
+                      {{
+                        info.sign_list &&
+                        info.sign_list.map((item) => item.account_name).join()
+                      }}
+                    </div>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <el-form-item class="form-item-long pd" label="会签：">
+                    <div class="w-100 scroll_over">
+                      {{
+                        info.hq_list &&
+                        info.hq_list.map((item) => item.account_name).join()
+                      }}
+                    </div>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <el-form-item class="form-item-long must pd" label="主送：">
+                    <div class="w-100 scroll_over">
+                      {{
+                        info.main_list &&
+                        info.main_list.map((item) => item.account_name).join()
+                      }}
+                    </div>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <el-form-item class="form-item-long pd" label="抄送：">
+                    <div class="w-100 scroll_over">
+                      {{
+                        info.copy_list &&
+                        info.copy_list.map((item) => item.account_name).join()
+                      }}
+                    </div>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <el-form-item class="form-item-long" label="拟稿单位：">
+                    {{ info.organ }}
+                  </el-form-item>
+                </td>
+                <td>
+                  <el-form-item class="form-item-long" label="拟稿人：">
+                    {{ info.creat_name && info.creat_name.account_name }}
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <el-form-item class="form-item-long" label="份数：">
+                    {{ info.receive_c }}
+                  </el-form-item>
+                </td>
+                <td>
+                  <el-form-item class="form-item-long" label="印刷：">
+                    {{ info.receive_print }}
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <el-form-item class="form-item-long pd" label="校对：">
+                    {{ info.check_name && info.check_name.account_name }}
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <el-form-item class="form-item-long must" label="标题：">
+                    {{ info.receive_title }}
+                  </el-form-item>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <el-form-item class="form-item-long mt-1 file-node" label="附件：">
+            <nFileInfo :fileList="info.file_list" :showTitle="false" />
+          </el-form-item>
+          <h2>正文内容</h2>
+          <div class="mt-1" v-html="info.receive_content"></div>
+        </el-form>
+      </n-scroll>
+    </div>
+    <div class="position-absolute right-box rounded-1 bg-white">
+      <n-scroll>
+        <nApprovalProcess style="width: 100%" :reviseArr="process_list" />
+      </n-scroll>
+    </div>
+  </div>
+</template>
+
+<script>
+import DynamicEditor from "@/components/QillEditor";
+import confirm from "@/mixins/confirm";
+
+export default {
+  mixins: [confirm],
+  components: {
+    DynamicEditor,
+  },
+  data() {
+    return {
+      printObj: {
+        id: "#print",
+        popTitle: "发文明细", //打印标题
+      },
+      process_list: [],
+      edit_id: 0,
+      info: {},
+      undoArr: [3, 4, 5],
+    };
+  },
+  created() {
+    // 默认登录者
+    this.edit_id = parseInt(this.Base64.decode(this.$route.query.id));
+    this.QueryReceiveFile(this.edit_id);
+  },
+  methods: {
+    deleteFun() {
+      this.confirm("", "", "是否确认删除").then(async () => {
+        let deleData = { receive_file_id: this.edit_id };
+        await api.DelReceiveReceiveFile(deleData);
+        this.$bus.$emit("refresh_document", "");
+        this.$router.go(-1);
+      });
+    },
+    undo() {
+      this.linkTo("enterprise_oa_document_myPost_undo", {
+        reverse_id: this.info.receive_approve_id_un,
+        title: this.info.receive_title,
+      });
+    },
+    handle() {
+      this.linkTo("enterprise_oa_document_write", {
+        id: this.edit_id,
+      });
+    },
+    async QueryReceiveFile(id) {
+      let { result } = await api.QueryReceiveReceiveFile({
+        receive_file_id: id,
+      });
+      this.info = result[0];
+      this.queryProcess(result[0].revise_info_id);
+    },
+    //查询审批
+    async queryProcess(id) {
+      let { result } = await api.queryApproveReviseRecordWithProcess({
+        revise_info_id: id,
+      });
+      this.process_list = result;
+    },
+    linkTo(name, query) {
+      this.$router.linkTo(name, query ? query : null);
+    },
+  },
+};
+</script>
+<style lang="scss" scoped>
+//自定义表格
+.table-box1 {
+  width: 100%;
+  height: 40px;
+  table-layout: fixed;
+  line-height: 40px;
+  text-align: left;
+  border-color: #fc3e3e;
+  border-collapse: collapse;
+  tr,
+  td {
+    border: 1px solid #fc3e3e;
+    padding-left: 6px;
+  }
+  .el-form-item {
+    margin-bottom: 0 !important;
+  }
+}
+.el-form-box ::v-deep {
+  .el-form-item__label {
+    color: #fc3e3e;
+  }
+  .el-input__inner {
+    border: none;
+  }
+}
+
+.left-box {
+  width: 59.4%;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+.right-box {
+  width: 40%;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+}
+</style>

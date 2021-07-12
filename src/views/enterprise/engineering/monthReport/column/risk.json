@@ -1,0 +1,63 @@
+[
+  {
+    "name": "案件情况",
+    "minWidth": "120px",
+    "checked": true,
+    "children": [
+      {
+        "name": "累计发生数量（个）",
+        "key": "project_risk_num",
+        "minWidth": "170px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "诉讼金额（万元）",
+        "key": "project_risk_money",
+        "minWidth": "170px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "当月发生数量（个）",
+        "key": "project_risk_month_num",
+        "minWidth": "170px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "诉讼金额（万元）",
+        "key": "project_risk_litigation_money",
+        "minWidth": "170px",
+        "isall": true,
+        "checked": true
+      }
+    ]
+  },
+  {
+    "name": "投诉事项",
+    "minWidth": "120px",
+    "checked": true,
+    "children": [
+      {
+        "name": "内容",
+        "key": "project_risk_complaint",
+        "minWidth": "145px",
+        "checked": true
+      },
+      {
+        "name": "金额",
+        "key": "project_risk_month_money",
+        "minWidth": "145px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "处理情况",
+        "key": "project_risk_dispose",
+        "minWidth": "145px",
+        "checked": true
+      }
+    ]
+  }
+]

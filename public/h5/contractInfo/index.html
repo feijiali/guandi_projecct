@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>合同计量详情</title>
+    <link rel="stylesheet" type="text/css" href="./css/index.css" />
+    <script src="./js/render.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/vue.min.js"></script>
+    <style>
+      .info-table {
+        width: 100%;
+        table-layout: fixed;
+        word-wrap: break-word;
+      }
+      .d-flex-cen {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .color-tr {
+        background-color: lightblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="info-wrap">
+      <template v-if="!nodata">
+        <div id="print">
+          <h2 class="txc">
+            {{info.engineering_main_start_time2}}-{{info.engineering_main_end_time2}}中间计量单
+          </h2>
+          <div class="clear mgt20 p20">
+            <span class="lt" style="width: 25%;">项目名称：{{info.organ}}</span>
+            <span class="lt" style="width: 25%;"
+              >合同编号：{{info.contract_approval_number}}</span
+            >
+            <span class="lt" style="width: 25%;"
+              >合同名称：{{info.contract_approval_name}}</span
+            >
+            <span class="lt" style="width: 25%;"
+              >计量时间：{{info.engineering_main_time}}</span
+            >
+          </div>
+          <div class="clear mgt10 p20">
+            <span class="lt" style="width: 25%;"
+              >班组名称：{{info.engineering_main_team}}</span
+            >
+            <span class="lt" style="width: 25%;"
+              >计量起止日期：{{info.engineering_main_start_time}} -
+              {{info.engineering_main_end_time}}</span
+            >
+            <span class="lt" style="width: 25%;"
+              >编号：{{info.engineering_main_number}}</span
+            >
+          </div>
+          <table class="info-table mgt10 ">
+            <tr>
+              <td rowspan="3" width="70">费用性质</td>
+              <td rowspan="3" width="40">编号</td>
+              <td rowspan="3" width="120">工程或费用名称</td>
+              <td rowspan="3" width="40">单位</td>
+              <td colspan="3" rowspan="2" width="220">签订合同情况</td>
+              <td colspan="3" rowspan="2" width="220">设计变更后</td>
+              <td colspan="7" width="400">实际完成情况</td>
+              <td rowspan="3" width="60">备注</td>
+            </tr>
+            <tr>
+              <td rowspan="2">单价(元)</td>
+              <td colspan="2">本月</td>
+              <td colspan="2">至上月累计</td>
+              <td colspan="2">至本月累计</td>
+            </tr>
+            <tr>
+              <td>数量</td>
+              <td>单价(元)</td>
+              <td width="200">金额(元)</td>
+              <td>数量</td>
+              <td>单价(元)</td>
+              <td>金额(元)</td>
+              <td>数量</td>
+              <td width="200">金额(元)</td>
+              <td>数量</td>
+              <td>金额(元)</td>
+              <td>数量</td>
+              <td>金额(元)</td>
+            </tr>
+            <!-- 表格主体区域 -->
+            <template v-for="(item, index) in tableList">
+              <template v-for="(itm, ind) in item.list">
+                <tr
+                  :key="ind + '' + index"
+                  :class="[itm.engineering_name=='小计'||itm.engineering_name=='合计'?'color-tr':'']"
+                >
+                  <td :rowspan="item.rowspan" v-if="ind == 0">
+                    {{ itm.engineering_type_name }}
+                  </td>
+                  <td v-if="ind<item.list.length-4">
+                    {{ ind + 1 }}
+                  </td>
+                  <td :colspan="ind<item.list.length-4?1:2">
+                    {{ itm.engineering_name }}
+                  </td>
+                  <td>
+                    {{ itm.engineering_rmb }}
+                  </td>
+                  <td>
+                    {{itm.engineering_sign_num}}
+                  </td>
+                  <td>{{itm.engineering_sign_num_price}}</td>
+                  <td>
+                    {{ itm.engineering_sign_money }}
+                  </td>
+                  <td>{{ itm.engineering_sign_change_num }}</td>
+                  <td>{{ itm.engineering_sign_change_price }}</td>
+                  <td>{{ itm.engineering_sign_change_money }}</td>
+                  <td>{{ itm.engineering_result_price }}</td>
+                  <td>{{ itm.engineering_result_nowmonth_num }}</td>
+                  <td>{{ itm.engineering_result_nowmonth_money }}</td>
+                  <td>{{ itm.engineering_result_for_numc }}</td>
+                  <td>{{ itm.engineering_result_for_moneyc }}</td>
+                  <td>{{ itm.engineering_result_for_nume }}</td>
+                  <td>{{ itm.engineering_result_for_moneye }}</td>
+                  <td>{{ itm.engineering_text }}</td>
+                </tr>
+              </template>
+            </template>
+            <!-- 表格主体区域 -->
+            <template v-for="(itm, ind) in tableList2">
+              <tr :key="ind">
+                <td colspan="3">
+                  {{ itm.engineering_type_name }}
+                </td>
+                <td>{{ itm.engineering_rmb }}</td>
+                <td>{{ itm.engineering_sign_num }}</td>
+                <td>{{ itm.engineering_sign_num_price }}</td>
+                <td>{{ itm.engineering_sign_money }}</td>
+                <td>{{ itm.engineering_sign_change_num }}</td>
+                <td>{{ itm.engineering_sign_change_price }}</td>
+                <td>{{ itm.engineering_sign_change_money }}</td>
+                <td>{{ itm.engineering_result_price }}</td>
+                <td>{{ itm.engineering_result_nowmonth_num }}</td>
+                <td>{{ itm.engineering_result_nowmonth_money }}</td>
+                <td>{{ itm.engineering_result_for_numc }}</td>
+                <td>{{ itm.engineering_result_for_moneyc }}</td>
+                <td>{{ itm.engineering_result_for_nume }}</td>
+                <td>{{ itm.engineering_result_for_moneye }}</td>
+                <td>{{ itm.engineering_text }}</td>
+              </tr>
+            </template>
+
+            <!-- 工程扣款情况区域 -->
+            <template v-for="(item, index) in tableList3">
+              <template v-for="(itm, ind) in item.list">
+                <tr
+                  :key="ind + '' + index + 's'"
+                  :class="[itm.engineering_name=='小计'||itm.engineering_name=='合计'?'color-tr':'']"
+                >
+                  <td :rowspan="item.rowspan" v-if="ind == 0">
+                    {{ itm.engineering_type_name }}
+                  </td>
+                  <td
+                    v-if="itm.engineering_name!='小计'&&itm.engineering_name!='合计'"
+                  >
+                    {{ ind + 1 }}
+                  </td>
+                  <td
+                    :colspan="itm.engineering_name=='小计'||itm.engineering_name=='合计'?2:1"
+                  >
+                    {{ itm.engineering_name }}
+                  </td>
+                  <td>
+                    {{ itm.engineering_rmb }}
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{{ itm.engineering_result_nowmonth_money }}</td>
+                  <td></td>
+                  <td>{{ itm.engineering_result_for_moneyc }}</td>
+                  <td></td>
+                  <td>
+                    {{ itm.engineering_result_for_moneye }}
+                  </td>
+                  <td>{{ itm.engineering_text }}</td>
+                </tr>
+              </template>
+            </template>
+            <tr>
+              <td colspan="2">本月应付计量款：</td>
+              <td colspan="11">
+                （人民币）{{numberParseChina(info.engineering_main_pay_money)}}
+              </td>
+              <td colspan="5">{{info.engineering_main_pay_money}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">累计应付计量款：</td>
+              <td colspan="11">
+                （人民币）{{numberParseChina(info.engineering_main_for_money)}}
+              </td>
+              <td colspan="5">{{info.engineering_main_for_money}}</td>
+            </tr>
+            <template v-if="process_list.length">
+              <tr v-for="(item,index) in process_list" :key="index">
+                <td colspan="4">
+                  <div style="text-align:left;padding:20px 0;">
+                    {{index==0?'填表人':'第'+(index)+'级审批'}}：{{item.sub_account_name}}
+                  </div>
+                </td>
+                <td colspan="2">
+                  <div style="text-align:left;padding:20px 0;">
+                    职位：{{item.sub_account_job}}
+                  </div>
+                </td>
+                <td colspan="5">
+                  <div
+                    style="text-align:left;padding:20px 0;position: relative;"
+                  >
+                    签名：<img
+                      style="height:50px;position: absolute;top:10px"
+                      :src="item.sign_url"
+                    />
+                  </div>
+                </td>
+                <td colspan="7" align="left">
+                  <div style="text-align:left;padding:20px 0;" v-if="index>0">
+                    意见：{{item.revise_record_remark}}
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </table>
+        </div>
+      </template>
+      <template v-if="nodata">
+        <div class="nodata-box d-flex-cen" style="margin-top: 280px;">
+          <div class="txc">
+            <img src="./img/bg_nodata.png" width="140px" />
+            <div class="mgt20">暂无数据</div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </body>
+  <script type="module" src="./plugins/printarea.js"></script>
+  <script type="module">
+    import print from "./plugins/printarea.js";
+    let url = location.origin;
+    let isDev = url.includes("build") ? false : true;
+    url = url + (isDev ? "/GUANDI_DEV" : "/GUANDI");
+    console.log(url);
+    var vm = new Vue({
+      el: "#app",
+      data: {
+        id: 0,
+        info: {},
+        nodata: false,
+        tableList: [
+          {
+            rowspan: 4,
+            list: [
+              {
+                engineering_type_name: "合同工程完成情况",
+                engineering_type: 1,
+                engineering_name: "不含增值税金额合计",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "0.00",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "0.00",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "0.00",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "0.00",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "合同工程完成情况",
+                engineering_type: 1,
+                engineering_name: "增值税税金金额",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "",
+                engineering_sign_money_ratio: "",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "合同工程完成情况",
+                engineering_type: 1,
+                engineering_name: "含增值税金额合计",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "0.00",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "0.00",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "0.00",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "0.00",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "合同工程完成情况",
+                engineering_type: 1,
+                engineering_name: "小计",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "0.00",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "0.00",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "0.00",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "0.00",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+            ],
+          },
+          {
+            rowspan: 4,
+            list: [
+              {
+                engineering_type_name: "补充合同",
+                engineering_type: 2,
+                engineering_name: "不含增值税金额合计",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "0.00",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "0.00",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "0.00",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "0.00",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "补充合同",
+                engineering_type: 2,
+                engineering_name: "增值税税金金额",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "",
+                engineering_sign_money_ratio: "",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "补充合同",
+                engineering_type: 2,
+                engineering_name: "含增值税金额合计",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "0.00",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "0.00",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "0.00",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "0.00",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "补充合同",
+                engineering_type: 2,
+                engineering_name: "小计",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "0.00",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "0.00",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "0.00",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+            ],
+          },
+          {
+            rowspan: 4,
+            list: [
+              {
+                engineering_type_name: "变更工程",
+                engineering_type: 3,
+                engineering_name: "不含增值税金额合计",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "0.00",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "0.00",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "0.00",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "0.00",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "变更工程",
+                engineering_type: 3,
+                engineering_name: "增值税税金金额",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "",
+                engineering_sign_money_ratio: "",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "变更工程",
+                engineering_type: 3,
+                engineering_name: "含增值税金额合计",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "0.00",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "0.00",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "0.00",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "0.00",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "变更工程",
+                engineering_type: 3,
+                engineering_name: "小计",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "0.00",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "0.00",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "0.00",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+            ],
+          },
+        ],
+        // 中间部分
+        tableList2: [
+          {
+            engineering_type_name: "含增值税金额合计(合计)",
+            engineering_type: 5,
+            engineering_name: "",
+            engineering_rmb: "元",
+            engineering_sign_num: "",
+            engineering_sign_num_price: "",
+            engineering_sign_money: "",
+            engineering_sign_change_num: "",
+            engineering_sign_change_price: "",
+            engineering_sign_change_money: "",
+            engineering_result_price: "",
+            engineering_result_nowmonth_num: "",
+            engineering_result_nowmonth_money: "0.00",
+            engineering_result_for_numc: "",
+            engineering_result_for_moneyc: "0.00",
+            engineering_result_for_nume: "",
+            engineering_result_for_moneye: "0.00",
+            engineering_text: "",
+          },
+          {
+            engineering_type_name: "本期计量金额构成",
+            engineering_type: 6,
+            engineering_name: "",
+            engineering_rmb: "元",
+            engineering_sign_num: "人工费",
+            engineering_sign_num_price: "",
+            engineering_sign_money: "材料费",
+            engineering_sign_change_num: "",
+            engineering_sign_change_price: "",
+            engineering_sign_change_money: "",
+            engineering_result_price: "",
+            engineering_result_nowmonth_num: "机械费",
+            engineering_result_nowmonth_money: "",
+            engineering_result_for_numc: "其它",
+            engineering_result_for_moneyc: "",
+            engineering_result_for_nume: "合计",
+            engineering_result_for_moneye: "0.00",
+            engineering_text: "",
+          },
+          {
+            engineering_type_name: "累计计量金额构成",
+            engineering_type: 7,
+            engineering_name: "",
+            engineering_rmb: "元",
+            engineering_sign_num: "人工费",
+            engineering_sign_num_price: "",
+            engineering_sign_money: "材料费",
+            engineering_sign_change_num: "",
+            engineering_sign_change_price: "",
+            engineering_sign_change_money: "",
+            engineering_result_price: "",
+            engineering_result_nowmonth_num: "机械费",
+            engineering_result_nowmonth_money: "",
+            engineering_result_for_numc: "其它",
+            engineering_result_for_moneyc: "",
+            engineering_result_for_nume: "合计",
+            engineering_result_for_moneye: "0.00",
+            engineering_text: "",
+          },
+          {
+            engineering_type_name: "班组施工人员数量",
+            engineering_type: 8,
+            engineering_name: "",
+            engineering_rmb: "人",
+            engineering_sign_num: "本月",
+            engineering_sign_num_price: "",
+            engineering_sign_money: "累计",
+            engineering_sign_change_num: "",
+            engineering_sign_change_price: "",
+            engineering_sign_change_money: "",
+            engineering_result_price: "",
+            engineering_result_nowmonth_num: "平均",
+            engineering_result_nowmonth_money: "",
+            engineering_result_for_numc: "",
+            engineering_result_for_moneyc: "",
+            engineering_result_for_nume: "",
+            engineering_result_for_moneye: "",
+            engineering_text: "",
+          },
+        ],
+        // 工程扣款情况
+        tableList3: [
+          {
+            rowspan: 4,
+            list: [
+              {
+                engineering_type_name: "工程扣款情况",
+                engineering_type: 9,
+                engineering_name: "保留金(5%)",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "工程扣款情况",
+                engineering_type: 9,
+                engineering_name: "其他扣款",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "工程扣款情况",
+                engineering_type: 9,
+                engineering_name: "暂扣变更工程扣款",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+              {
+                engineering_type_name: "工程扣款情况",
+                engineering_type: 9,
+                engineering_name: "合计",
+                engineering_rmb: "元",
+                engineering_sign_num: "",
+                engineering_sign_num_price: "",
+                engineering_sign_money: "",
+                engineering_sign_change_num: "",
+                engineering_sign_change_price: "",
+                engineering_sign_change_money: "",
+                engineering_result_price: "",
+                engineering_result_nowmonth_num: "",
+                engineering_result_nowmonth_money: "0.00",
+                engineering_result_for_numc: "",
+                engineering_result_for_moneyc: "0.00",
+                engineering_result_for_nume: "",
+                engineering_result_for_moneye: "0.00",
+                engineering_text: "",
+              },
+            ],
+          },
+        ],
+        process_list: [], //审批流程
+      },
+      mounted() {
+        this.id = GetQueryString("id");
+        this.id != "0" && this.infoFun();
+        this.id == "0" && (this.nodata = true);
+        let that = this;
+        window.addEventListener(
+          "message",
+          function(event) {
+            if (event.data == "print") {
+              //点击打印
+              new print({
+                ids: "print", // * 局部打印必传入id
+                standard: "", // 文档类型，默认是html5，可选 html5，loose，strict
+                extraHead: "", // 附加在head标签上的额外标签,使用逗号分隔
+                extraCss: "", // 额外的css连接，多个逗号分开
+                popTitle: "", // title的标题
+                endCallback() {},
+              });
+            } else {
+              that.id = event.data;
+              if (that.id != "0") {
+                that.infoFun();
+                that.nodata = false;
+              } else {
+                that.nodata = true;
+              }
+            }
+          },
+          false
+        );
+      },
+      methods: {
+        //阿拉伯数字转换成大写汉字
+        numberParseChina(money) {
+          let moneyOld = money;
+          //汉字的数字
+          var cnNums = new Array(
+            "零",
+            "壹",
+            "贰",
+            "叁",
+            "肆",
+            "伍",
+            "陆",
+            "柒",
+            "捌",
+            "玖"
+          );
+          //基本单位
+          var cnIntRadice = new Array("", "拾", "佰", "仟");
+          //对应整数部分扩展单位
+          var cnIntUnits = new Array("", "万", "亿", "兆");
+          //对应小数部分单位
+          var cnDecUnits = new Array("角", "分", "毫", "厘");
+          //整数金额时后面跟的字符
+          var cnInteger = "整";
+          //整型完以后的单位
+          var cnIntLast = "圆";
+          //最大处理的数字
+          var maxNum = 999999999999999.9999;
+          //金额整数部分
+          var integerNum;
+          //金额小数部分
+          var decimalNum;
+          //输出的中文金额字符串
+          var chineseStr = "";
+          //分离金额后用的数组，预定义
+          var parts;
+          if (money == "") {
+            return "";
+          }
+          money = parseFloat(money);
+          if (money >= maxNum) {
+            //超出最大处理数字
+            return "";
+          }
+          if (money == 0) {
+            chineseStr = cnNums[0] + cnIntLast + cnInteger;
+            return chineseStr;
+          }
+          //转换为字符串
+          money = Math.abs(money).toString();
+          if (money.indexOf(".") == -1) {
+            integerNum = money;
+            decimalNum = "";
+          } else {
+            parts = money.split(".");
+            integerNum = parts[0];
+            decimalNum = parts[1].substr(0, 4);
+          }
+          //获取整型部分转换
+          if (parseInt(integerNum, 10) > 0) {
+            var zeroCount = 0;
+            var IntLen = integerNum.length;
+            for (var i = 0; i < IntLen; i++) {
+              var n = integerNum.substr(i, 1);
+              var p = IntLen - i - 1;
+              var q = p / 4;
+              var m = p % 4;
+              if (n == "0") {
+                zeroCount++;
+              } else {
+                if (zeroCount > 0) {
+                  chineseStr += cnNums[0];
+                }
+                //归零
+                zeroCount = 0;
+                chineseStr += cnNums[parseInt(n)] + cnIntRadice[m];
+              }
+              if (m == 0 && zeroCount < 4) {
+                chineseStr += cnIntUnits[q];
+              }
+            }
+            chineseStr += cnIntLast;
+          }
+          //小数部分
+          if (decimalNum != "") {
+            var decLen = decimalNum.length;
+            for (var i = 0; i < decLen; i++) {
+              var n = decimalNum.substr(i, 1);
+              if (n != "0") {
+                chineseStr += cnNums[Number(n)] + cnDecUnits[i];
+              }
+            }
+          }
+          if (chineseStr == "") {
+            chineseStr += cnNums[0] + cnIntLast + cnInteger;
+          } else if (decimalNum == "") {
+            chineseStr += cnInteger;
+          }
+          console.log(moneyOld);
+          if (moneyOld) {
+            if (moneyOld.slice(0, 1) == "-") {
+              return "负" + chineseStr;
+            } else {
+              return chineseStr;
+            }
+          } else {
+            return chineseStr;
+          }
+        },
+        queryApproveReviseRecordWithProcess() {
+          axios
+            .post(url + "?op=QueryApproveReviseRecordWithProcess", {
+              revise_info_id: this.info.revise_info_id,
+            })
+            .then((res) => {
+              this.process_list = res.data.ext.result;
+            });
+        },
+        infoFun() {
+          axios
+            .post(url + "?op=QueryProjectReportEngineeringMain", {
+              engineering_main_id: Number(this.id),
+              tag: 1,
+            })
+            .then((res) => {
+              if (!res.data.ext.result[0]) return;
+              let list = res.data.ext.result[0].list || [];
+              this.info = res.data.ext.result[0];
+              // 查询审批流程
+              this.queryApproveReviseRecordWithProcess();
+              let time1 = this.info.engineering_main_start_time.split("-");
+              let time2 = this.info.engineering_main_end_time.split("-");
+              this.info.engineering_main_start_time2 =
+                time1[0] + "年" + Number(time1[1]) + "月";
+              this.info.engineering_main_end_time2 =
+                time2[0] + "年" + Number(time2[1]) + "月";
+              let arr1 = list.filter((item) => item.engineering_type == 1); //合同工程完成情况
+              let arr2 = list.filter((item) => item.engineering_type == 2); //补充合同
+              let arr3 = list.filter((item) => item.engineering_type == 3); //变更工程
+              let arr4 = list.filter(
+                (item) =>
+                  item.engineering_type == 4 ||
+                  item.engineering_type == 5 ||
+                  item.engineering_type == 6 ||
+                  item.engineering_type == 7 ||
+                  item.engineering_type == 8
+              ); //4:扣除领用材料
+              let arr5 = list.filter((item) => item.engineering_type == 9); //工程扣款情况
+
+              this.tableList[0].list = arr1;
+              this.tableList[1].list = arr2;
+              this.tableList[2].list = arr3;
+              this.tableList[0].rowspan = arr1.length;
+              this.tableList[1].rowspan = arr2.length;
+              this.tableList[2].rowspan = arr3.length;
+              this.tableList2 = arr4;
+              this.tableList3[0].list = arr5;
+              this.tableList3[0].rowspan = arr5.length;
+            });
+        },
+      },
+    });
+  </script>
+</html>

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "质量评价（优、良、合格、差）",
+    "minWidth": "95px",
+    "checked": true,
+    "isTemp": true,
+    "key": "project_linkage_quality_level",
+    "labelArry": ["", "优", "良", "合格", "差"]
+  },
+  {
+    "name": "安全评价（优、良、合格、差）",
+    "minWidth": "95px",
+    "checked": true,
+    "isTemp": true,
+    "key": "project_linkage_security_level",
+    "labelArry": ["", "优", "良", "合格", "差"]
+  },
+  {
+    "name": "创优计划（有、无）",
+    "minWidth": "95px",
+    "checked": true,
+    "isTemp": true,
+    "key": "project_linkage_excellence",
+    "labelArry": ["", "有", "无"]
+  }
+]

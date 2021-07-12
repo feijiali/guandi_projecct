@@ -1,0 +1,55 @@
+// 重新设置列表页面的样式
+.table-list-wrap {
+  display: flex;
+  flex-direction: column;
+}
+.nav-box {
+  left: 10px;
+  top: 20px;
+  z-index: 22;
+}
+.layer-table-box {
+  overflow: hidden;
+  table {
+    border-spacing: 0;
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    border-collapse: collapse;
+    width: 100%;
+    tr,
+    td,
+    th {
+      height: 50px;
+    }
+    .table-w {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      max-width: 100%;
+      padding: 10px;
+      max-width: 100%;
+      .table-wl {
+        text-align: left;
+        width: 32px;
+      }
+      .table-wt {
+        flex: 1;
+        width: calc(100% - 20px);
+      }
+    }
+
+    .el-input {
+      input {
+        border: 0;
+      }
+    }
+  }
+}
+.table-wt .el-textarea__inner {
+  padding: 0 15px;
+  border: none !important;
+  resize: none;
+  min-height: auto !important;
+  height: auto !important;
+}

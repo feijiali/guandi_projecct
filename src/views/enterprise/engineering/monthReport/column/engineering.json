@@ -1,0 +1,296 @@
+[
+  {
+    "name": "实际工期",
+    "minWidth": "290px",
+    "checked": true,
+    "children": [
+      {
+        "name": "实际开工时间",
+        "key": "project_linkage_operation_date",
+        "minWidth": "145px",
+        "checked": true
+      },
+      {
+        "name": "实际完工时间",
+        "key": "project_linkage_operation_end_date",
+        "minWidth": "145px",
+        "checked": true
+      }
+    ]
+  },
+  {
+    "name": "监理季度评价（非常满意、满意、一般、差）",
+    "minWidth": "250px",
+    "checked": true,
+    "isTemp": true,
+    "key": "project_linkage_evaluate",
+    "labelArry": [
+      "",
+      "非常满意",
+      "满意",
+      "一般",
+      "差"
+    ]
+  },
+  {
+    "name": "业主季度评价（非常满意、满意、一般、差）",
+    "minWidth": "250px",
+    "checked": true,
+    "isTemp": true,
+    "key": "project_linkage_people_evaluate",
+    "labelArry": [
+      "",
+      "非常满意",
+      "满意",
+      "一般",
+      "差"
+    ]
+  },
+  {
+    "name": "项目状态（完工/在建）",
+    "minWidth": "190px",
+    "checked": true,
+    "isTemp": true,
+    "key": "project_linkage_project_state",
+    "labelArry": [
+      "",
+      "完工",
+      "在建"
+    ]
+  },
+  {
+    "name": "截至去年12月累计审批完成产值（万元）",
+    "minWidth": "250px",
+    "checked": true,
+    "isall": true,
+    "key": "project_linkage_approve_money"
+  },
+  {
+    "name": "本年度审批完成产值（万元）",
+    "minWidth": "180px",
+    "checked": true,
+    "children": [
+      {
+        "name": "本月",
+        "key": "project_linkage_month_approve_money",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "本年度",
+        "key": "project_linkage_year_approve_money",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      }
+    ]
+  },
+  {
+    "name": "开工至今累计审批完成产值（万元）",
+    "minWidth": "200px",
+    "checked": true,
+    "isall": true,
+    "key": "project_linkage_total_approve_money"
+  },
+  {
+    "name": "未确认产值（万元）",
+    "minWidth": "180px",
+    "checked": true,
+    "isall": true,
+    "key": "project_linkage_unconfirmed_worth"
+  },
+  {
+    "name": "工程款收款情况（万元）",
+    "minWidth": "420px",
+    "checked": true,
+    "children": [
+      {
+        "name": "当月应收",
+        "key": "project_linkage_month_worth",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "当月已收",
+        "key": "project_linkage_month_worthed",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "累计应收",
+        "key": "project_linkage_total_worth",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "累计已收",
+        "key": "project_linkage_total_worthed",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "累计应收未收",
+        "key": "project_linkage_worth",
+        "minWidth": "120px",
+        "isall": true,
+        "checked": true
+      }
+    ]
+  },
+  {
+    "name": "本月申请支付金额（万元）",
+    "checked": true,
+    "children": [
+      {
+        "name": "劳务、专业分包",
+        "key": "project_linkage_month_pay",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "材料(主材)",
+        "key": "project_linkage_month_material_pay",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "材料(辅材)",
+        "key": "project_linkage_month_materials_pay",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "机械",
+        "key": "project_linkage_month_equip_pay",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "其它",
+        "key": "project_linkage_month_other_pay",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "合计",
+        "key": "project_linkage_month_total_pay",
+        "minWidth": "120px",
+        "isall": true,
+        "checked": true
+      }
+    ]
+  },
+  {
+    "name": "累计支付金额（万元）（含本月）",
+    "checked": true,
+    "children": [
+      {
+        "name": "劳务、专业分包",
+        "key": "project_linkage_payed",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "材料(主材)",
+        "key": "project_linkage_material_payed",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "材料(辅材)",
+        "key": "project_linkage_materials_payed",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "机械",
+        "key": "project_linkage_equip_payed",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "其它",
+        "key": "project_linkage_other_payed",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "合计",
+        "key": "project_linkage_total_payed",
+        "minWidth": "120px",
+        "isall": true,
+        "checked": true
+      }
+    ]
+  },
+  {
+    "name": "应付未付（万元）",
+    "checked": true,
+    "children": [
+      {
+        "name": "劳务、专业分包",
+        "key": "project_linkage_paying",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "材料(主材)",
+        "key": "project_linkage_material_paying",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "材料(辅材)",
+        "key": "project_linkage_materials_paying",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "机械",
+        "key": "project_linkage_equip_paying",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "其它",
+        "key": "project_linkage_other_paying",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "保留金等暂扣款",
+        "key": "project_linkage_withhold_paying",
+        "minWidth": "90px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "合计",
+        "key": "project_linkage_total_paying",
+        "minWidth": "120px",
+        "isall": true,
+        "checked": true
+      }
+    ]
+  }
+]

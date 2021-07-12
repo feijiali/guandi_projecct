@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>工程材料用量统计表</title>
+  <link rel="stylesheet" type="text/css" href="./css/index.css" />
+  <script src="./js/render.js"></script>
+  <script src="./js/axios.min.js"></script>
+  <script src="./js/vue.min.js"></script>
+  <style>
+    .info-table {
+      width: 100%;
+
+      word-wrap: break-word;
+    }
+
+    .d-flex-cen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .color-tr {
+      background-color: lightblue;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" class="info-wrap">
+    <template v-if="!nodata">
+      <div id="print">
+        <table class="info-table mgt10 ">
+          <tr height="50">
+            <td colspan="12">
+              <h2>工程材料用量统计表</h2>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" class="td">项目部：工程项目</td>
+            <td colspan="3">2021年5月</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr height="50">
+            <td width="20">序号</td>
+            <td width="130">
+              材料名称
+            </td>
+            <td width="30">单位</td>
+            <td width="70">图纸数量</td>
+            <td width="70">累计完成数量</td>
+            <td width="70">本期完成数量</td>
+            <td width="70">剩余数量</td>
+            <td width="70">完成百分比(%)</td>
+            <td width="130">备注</td>
+          </tr>
+          <!-- 表格数据区域 -->
+          <tr v-for="(item, index) in tableList">
+            <td></td>
+          </tr>
+          <!-- 审批区域 -->
+          <tr height="50">
+            <td class="td" colspan="2">填表人：管理人员</td>
+            <td class="td" colspan="2">职位：物资员</td>
+            <td class="td" colspan="2">签名：管理人员</td>
+            <td class="td" colspan="3"></td>
+          </tr>
+          <tr height="50">
+            <td class="td" colspan="2">第一级审批：审核人</td>
+            <td class="td" colspan="2">职位：审核人</td>
+            <td class="td" colspan="2">签名：审核人</td>
+            <td class="td" colspan="3">意见</td>
+          </tr>
+          <tr height="50">
+            <td class="td" colspan="2">第二级审批：复核人</td>
+            <td class="td" colspan="2">职位：复核人</td>
+            <td class="td" colspan="2">签名：复核人</td>
+            <td class="td" colspan="3">意见</td>
+          </tr>
+        </table>
+      </div>
+    </template>
+    <template v-if="nodata">
+      <div class="nodata-box d-flex-cen" style="margin-top: 280px;">
+        <div class="txc">
+          <img src="./img/bg_nodata.png" width="140px" />
+          <div class="mgt20">暂无数据</div>
+        </div>
+      </div>
+    </template>
+  </div>
+</body>
+<script type="module" src="./plugins/printarea.js"></script>
+<script type="module">
+  import print from "./plugins/printarea.js";
+  let url = location.origin;
+  let isDev = url.includes("build") ? false : true;
+  url = url + (isDev ? "/GUANDI_DEV" : "/GUANDI");
+
+  var vm = new Vue({
+    el: "#app",
+    data: {
+      id: 0,
+      info: {},
+      nodata: false,
+      tableList: [],
+
+    },
+    mounted() {
+      this.id = GetQueryString("id");
+      this.id != "0" && this.infoFun();
+      this.id == "0" && (this.nodata = true);
+      let that = this;
+      window.addEventListener(
+        "message",
+        function (event) {
+          if (event.data == "print") {
+            //点击打印
+            new print({
+              ids: "print", // * 局部打印必传入id
+              standard: "", // 文档类型，默认是html5，可选 html5，loose，strict
+              extraHead: "", // 附加在head标签上的额外标签,使用逗号分隔
+              extraCss: "", // 额外的css连接，多个逗号分开
+              popTitle: "", // title的标题
+              endCallback() { },
+            });
+          } else {
+            that.id = event.data;
+            if (that.id != "0") {
+              that.infoFun();
+              that.nodata = false;
+            } else {
+              that.nodata = true;
+            }
+          }
+        },
+        false
+      );
+    },
+    methods: {
+
+
+      infoFun() {
+        axios
+          .post(url + "?op=QueryProjectReportEngineeringMain", {
+            engineering_main_id: Number(this.id),
+            tag: 1,
+          })
+          .then((res) => {
+            if (!res.data.ext.result[0]) return;
+
+          })
+      },
+    },
+  });
+</script>
+
+</html>

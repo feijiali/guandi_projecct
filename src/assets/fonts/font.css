@@ -1,0 +1,7 @@
+@font-face {
+  font-family: "Langdon";
+  src: url("Langdon.otf");
+}
+.langdon-font {
+  font-family: Langdon;
+}

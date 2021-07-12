@@ -1,0 +1,113 @@
+[
+  {
+    "name": "签订日期",
+    "minWidth": "90px",
+    "checked": true,
+    "key": "project_linkage_sign_date"
+  },
+  {
+    "name": "合同编号",
+    "minWidth": "90px",
+    "key": "project_linkage_sign_no",
+    "checked": true
+  },
+  {
+    "name": "总包/分包",
+    "minWidth": "95px",
+    "checked": true,
+    "isTemp": true,
+    "key": "project_linkage_type",
+    "labelArry": [
+      "",
+      "总包",
+      "分包"
+    ]
+  },
+  {
+    "name": "发包单位",
+    "key": "project_linkage_unit",
+    "minWidth": "90px",
+    "checked": true
+  },
+  {
+    "name": "工程所在地",
+    "key": "project_linkage_address",
+    "minWidth": "105px",
+    "checked": true
+  },
+  {
+    "name": "工程质量要求",
+    "key": "project_linkage_quality",
+    "minWidth": "120px",
+    "checked": true
+  },
+  {
+    "name": "项目负责人员",
+    "key": "project_linkage_charge_account",
+    "minWidth": "120px",
+    "checked": true
+  },
+  {
+    "name": "项目经办人员",
+    "key": "project_linkage_handling_account",
+    "minWidth": "120px",
+    "checked": true
+  },
+  {
+    "name": "经营专员",
+    "key": "project_linkage_commissioner",
+    "minWidth": "90px",
+    "checked": true
+  },
+  {
+    "name": "合同总金额（万元）",
+    "key": "project_linkage_total_money",
+    "minWidth": "120px",
+    "isall": true,
+    "checked": true
+  },
+  {
+    "name": "合同约定付款",
+    "minWidth": "120px",
+    "checked": true,
+    "children": [
+      {
+        "name": "预付款（%）",
+        "key": "project_linkage_contract_per",
+        "minWidth": "120px",
+        "checked": true
+      },
+      {
+        "name": "进度比例（%）",
+        "key": "project_linkage_contracting_per",
+        "minWidth": "135px",
+        "checked": true
+      },
+      {
+        "name": "完工比例（%）",
+        "key": "project_linkage_contracted_per",
+        "minWidth": "135px",
+        "checked": true
+      }
+    ]
+  },
+  {
+    "name": "合同工期",
+    "minWidth": "290px",
+    "checked": true,
+    "children": [
+      {
+        "name": "合同开工时间",
+        "key": "project_linkage_contract_date",
+        "minWidth": "145px",
+        "checked": true
+      },
+      {
+        "name": "合同完工时间",
+        "key": "project_linkage_contract_finish_date",
+        "minWidth": "145px",
+        "checked": true
+      }
+    ]
+  }
+]

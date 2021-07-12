@@ -1,0 +1,100 @@
+[
+  {
+    "name": "累计开发票金额（万元）",
+    "minWidth": "90px",
+    "checked": true,
+    "isall": true,
+    "key": "project_linkage_billing"
+  },
+  {
+    "name": "借款余额（万元）（应与资金指标明细表数据一致）",
+    "minWidth": "90px",
+    "key": "project_linkage_finance_loan",
+    "isall": true,
+    "checked": true
+  },
+  {
+    "name": "累计应交（应扣）费用（万元）",
+    "minWidth": "120px",
+    "checked": true,
+    "children": [
+      {
+        "name": "税费",
+        "key": "project_linkage_finance_taxed",
+        "minWidth": "120px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "管理费",
+        "key": "project_linkage_finance_managed",
+        "minWidth": "135px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "其他指标款",
+        "key": "project_linkage_finance_othered",
+        "minWidth": "120px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "风险保证金和保函保证金",
+        "key": "project_linkage_finance_moneyed",
+        "minWidth": "135px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "小计",
+        "key": "project_linkage_finance_totaled",
+        "minWidth": "120px",
+        "isall": true,
+        "checked": true
+      }
+    ]
+  },
+  {
+    "name": "累计应交未交（应扣未扣）费用（万元）",
+    "minWidth": "290px",
+    "checked": true,
+    "children": [
+      {
+        "name": "税费",
+        "key": "project_linkage_finance_tax",
+        "minWidth": "120px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "管理费",
+        "key": "project_linkage_finance_manage",
+        "minWidth": "135px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "其他指标款",
+        "key": "project_linkage_finance_other",
+        "minWidth": "120px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "风险保证金和保函保证金",
+        "key": "project_linkage_finance_money",
+        "minWidth": "135px",
+        "isall": true,
+        "checked": true
+      },
+      {
+        "name": "小计",
+        "key": "project_linkage_finance_total",
+        "minWidth": "120px",
+        "isall": true,
+        "checked": true
+      }
+    ]
+  }
+]

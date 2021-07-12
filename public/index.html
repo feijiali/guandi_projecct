@@ -1,0 +1,44 @@
+<!--
+ * @Autor: 邓易
+ * @Date: 2021-03-03 09:16:33
+ * @LastEditors: 邓易
+ * @LastEditTime: 2021-03-04 09:33:31
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="renderer" content="webkit" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=a420b02e3f8387ad0973443c446dc3a8"></script>
+    <title>
+      <%= htmlWebpackPlugin.options.title %>
+    </title>
+    <script>
+      var UnityWebGL =
+        "<%= htmlWebpackPlugin.options.BaseUrl %>/UnityAssets/WebGL/Build/WebGL.json";
+    </script>
+    <!-- <script src="./static/TemplateData/UnityProgress.js"></script> -->
+    <script src="<%= htmlWebpackPlugin.options.BaseUrl %>/UnityAssets/WebGL/Build/UnityLoader.js"></script>
+    <script type="text/javascript" src="./static/js/APIUtility.js"></script>
+    <script type="text/javascript" src="./static/js/index.js"></script>
+  </head>
+
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <link
+      rel="stylesheet"
+      href="//at.alicdn.com/t/font_2004805_iu45tiayozm.css"
+    />
+  </body>
+</html>
